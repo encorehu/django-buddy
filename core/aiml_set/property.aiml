@@ -4,7 +4,7 @@
     <pattern>INIT</pattern>
     <template>
       <think>
-        <set name="botname">@Django Buddy</set>
+        <set name="botname">@DjangoBuddy</set>
         <set name="master">@encorehu</set>
         <set name="orgnization">DDTCMS</set>
         <set name="gender">Boy</set>

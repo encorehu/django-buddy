@@ -148,12 +148,12 @@ function getLanguageInfo() {
     			for(var x in json.nctable) {
     				var opt = $("<option></option>").val(json.nctable[x].nc).text(json.nctable[x].vnc);
 
-    				if( getCookie("selected_nc") == json.nctable[x].nc ) {		// 저장된 쿠키값이 있으면 먼저 선택
+    				if( getCookie("selected_nc") == json.nctable[x].nc ) {		// 저장된 쿠키값이 있으�?먼저 선택
     					$(opt).attr("selected", "selected");
     					isSelected = true;
     					$("#hid-lang").val(json.nctable[x].nc);
     				}
-    				else if( $("#hid-lang").val() == json.nctable[x].nc ) {		// 브라우저 설정 언어로 선택
+    				else if( $("#hid-lang").val() == json.nctable[x].nc ) {		// 브라우저 설정 언어�?선택
     					if(!isSelected) {
     						$(opt).attr("selected", "selected");
     					}
@@ -305,8 +305,12 @@ String.prototype.htmlEntities = function() {
 					<li class="menu quotes"><a href="#" title="Quotes"><span class="">Quotes</span></a></li>
 				</ul>
 			</div>
-			<div id="sns-subscribe" style="position:absolute;top:24px;right:160px;">
-				<div style="position:absolute;top:5px;"><a href="#" class="follow-button" data-show-count="false" data-show-screen-name="false" style="top:10px;">Follow @jiangoubadi</a></div>
+			<div id="sns-subscribe" style="position:absolute;top:24px;right:20px;">
+				<div style="/*position:absolute;*/top:5px;">
+					<ul><li><a href="#" class="follow-button" data-show-count="false" data-show-screen-name="false" style="top:10px;">Follow @DjangoBuddy</a></li>
+					<li>&nbsp</li>
+					<li><a href="https://github.com/encorehu/django-buddy" title="">DjangoBuddy SourceCode</a></li></ul>
+					</div>
 
 				</div>
 		</div><div id="chat">
@@ -325,7 +329,7 @@ String.prototype.htmlEntities = function() {
 			<div id="chat-bottom">
 				<div id="lang-area">
 					<span class="learn-desc">Badi learned <span id="totalLearnedCount">94,358</span> sentences.</span>
-					<select name="lang-selector" id="lang-selector"><option value="ch">Chinese – Simplified (簡體)</option><option value="ko">한국어</option><option value="en">English</option><option value="zh">Chinese – Traditional (繁體)</option><option value="ph">Filipino</option><option value="he">Hebrew</option><option value="th">Thai</option><option value="id">Bahasa Indonesia</option><option value="ja">日本語</option><option value="ms">Bahasa Melayu</option><option value="vn">tieng viet</option><option value="ar">العربية</option><option value="ru">Русский&lt;</option><option value="nl">Nederlands</option><option value="de">Deutsch</option><option value="pt">Português</option><option value="es">Español</option><option value="it">Italiano</option><option value="fr">Français</option><option value="sv">Svenska</option><option value="da">Dansk</option><option value="tr">Türkçe</option><option value="nb">Norsk (Bokmål)</option><option value="hr">Hrvatski</option><option value="kh">Khmer</option><option value="pl">Polski</option><option value="fi">Suomi</option><option value="ml">Malayalam</option><option value="hu">magyar</option><option value="ro">Română</option><option value="hi">Hindi</option><option value="bg">Български</option><option value="ta">Tamil</option><option value="el">Ελληνικά</option><option value="lt">Lietuvių</option><option value="uk">українець</option><option value="pa">Punjabi</option><option value="af">Afrikaans</option><option value="cs">čeština</option><option value="sk">Slovenčina</option><option value="rs">Српски</option><option value="ca">catala</option><option value="te">Telugu</option><option value="fa">فارسی</option><option value="eu">Euskara</option><option value="cy">Cymraeg</option><option value="al">Shqipëria</option><option value="az">آذربايجان ديلی</option></select>
+					<select name="lang-selector" id="lang-selector"><option value="ch">Chinese �?Simplified (簡體)</option><option value="ko">한국�?/option><option value="en">English</option><option value="zh">Chinese �?Traditional (繁體)</option><option value="ph">Filipino</option><option value="he">Hebrew</option><option value="th">Thai</option><option value="id">Bahasa Indonesia</option><option value="ja">日本�?/option><option value="ms">Bahasa Melayu</option><option value="vn">tieng viet</option><option value="ar">العربية</option><option value="ru">Русский&lt;</option><option value="nl">Nederlands</option><option value="de">Deutsch</option><option value="pt">Português</option><option value="es">Español</option><option value="it">Italiano</option><option value="fr">Français</option><option value="sv">Svenska</option><option value="da">Dansk</option><option value="tr">Türkçe</option><option value="nb">Norsk (Bokmål)</option><option value="hr">Hrvatski</option><option value="kh">Khmer</option><option value="pl">Polski</option><option value="fi">Suomi</option><option value="ml">Malayalam</option><option value="hu">magyar</option><option value="ro">Română</option><option value="hi">Hindi</option><option value="bg">Български</option><option value="ta">Tamil</option><option value="el">Ελληνικά</option><option value="lt">Lietuvių</option><option value="uk">українець</option><option value="pa">Punjabi</option><option value="af">Afrikaans</option><option value="cs">čeština</option><option value="sk">Slovenčina</option><option value="rs">Српски</option><option value="ca">catala</option><option value="te">Telugu</option><option value="fa">فارسی</option><option value="eu">Euskara</option><option value="cy">Cymraeg</option><option value="al">Shqipëria</option><option value="az">آذربايجان ديلی</option></select>
 				</div>
 				<div id="chat-area">
 					<div id="chatbox"><input type="text" name="userinput" id="userinput" class="userinput" maxlength="100" style="margin-top: 0px;"></div>
@@ -341,12 +345,12 @@ String.prototype.htmlEntities = function() {
 		</div>
 		<div class="cb"></div>
 		<div id="footer">
-		
+
 			<div class="left">
-			&copy;  JianGouBaDi Inc.<a href="http://csdnlp.duapp.com/" class="space">About</a>
-			<a href="http://csdnlp.duapp.com/api/" class="space" target="_blank">API</a>   
+			&copy;  DjangoBuddy Inc.<a href="http://csdnlp.duapp.com/" class="space">About</a>
+			<a href="http://csdnlp.duapp.com/api/" class="space" target="_blank">API</a>
 			<a href="http://csdnlp.duapp.com/licenses/" class="space" target="_blank">Licenses</a>
-			<a href="http://ddtcms.com/blog/" class="space " target="_blank">Blog</a> 
+			<a href="http://ddtcms.com/blog/" class="space " target="_blank">Blog</a>
 			</div>
 			<div class="cb"></div>
 		</div>
