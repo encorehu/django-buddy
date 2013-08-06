@@ -1,0 +1,150 @@
+{% load i18n %}<!doctype html>
+<!--[if lt IE 7 ]><html lang="en" class="no-js ie6"><![endif]-->
+<!--[if (gt IE 6)|!(IE)]><!--><html lang="en" class="no-js"><!--<![endif]-->
+<head>
+	{% block meta %}
+	<meta charset="{% block meta.charset %}utf-8{% endblock meta.charset %}">
+	<title>{% block title %}title{% endblock %} - {{SITE_NAME}}</title>
+	
+	<meta name="description" content="{% block meta.description %}{{ SITE_NAME }}{% endblock meta.description %}" />
+	<meta name="keywords" content="{% block meta.keywords %}DDTCMS, {{ SITE_NAME }} {% endblock meta.keywords %}" />
+	<meta name="author" content="{% block meta.author %}huyoo,糊糊{% endblock meta.author %}">
+	<meta name="robots" content="{% block meta.robots %}index,follow{% endblock meta.robots %}" />
+	<meta name="generator" content="DDTCMS V{{ DDTCMS_VERSION }}" />
+	<meta name="copyright" content="http://{{ SITE_DOMAIN }}/" />	
+	{%comment%}<meta name="baidu_union_verify" content="4d5fea933612cab56d6459709399d6a4">{%endcomment%}
+	<meta property="wb:webmaster" content="4d4ca5d34d454c22" />
+	{% endblock meta %}
+	
+	<!-- Delete these two icon references once you've placed them in the root directory with these file names -->
+	
+	<link rel="shortcut icon" href="/favicon.ico"><!-- favicon 16x16 -->
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png"><!-- apple touch icon 57x57 -->
+	
+	{% block css %}
+	{% block css.shared %}	
+	<link rel="stylesheet" href="{{ STATIC_URL }}css/default.css?v=20110806" media="screen" />
+	{% endblock css.shared %}
+	{% block css.custom %}{% endblock css.custom %}
+	{% endblock css%}
+
+
+
+	{% if DEBUG %}<!-- Modernizr for feature detection of CSS3 and HTML5; must be placed in the "head" -->
+	<script src="{{ STATIC_URL }}js/modernizr-1.6.min.js"></script>
+	{%else%}<!-- Remove the script reference below if you're using Modernizr -->
+	<!--[if lt IE 9]>
+	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->{%endif%}
+
+	
+	
+	{% block js %}
+	{% block js.shared %}
+	{% if DEBUG %}<script src="{{ STATIC_URL }}js/jquery-1.6.4.min.js"></script>{%else%}
+
+    <!-- jQuery version might not be the latest; check jquery.com -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+    <script>!window.jQuery && document.write(unescape('%3Cscript src="{{ STATIC_URL }}js/jquery-1.6.4.min.js"%3E%3C/script%3E'))</script>{%endif%}
+	{% endblock js.shared %}
+	{% block js.custom %}{% endblock js.custom %}
+	{% endblock js%}
+	
+	{% block rss %}
+	{% block rss.shared %}{% endblock rss.shared%}	
+	{% block rss.custom %}{% endblock rss.custom%}
+	{% endblock rss%}
+	
+	{% block head.extra %}{% endblock head.extra%}
+</head>
+
+<!-- If possible, use the body as the container -->
+<!-- The "home" class is an example of a dynamic class created on the server for page-specific targeting -->
+<body class="home" {% block bodyonload %}{% endblock bodyonload %}>
+<section class="wrapper">
+	<!-- ******************************************************************** -->
+	<!-- The content below is for demonstration of some common HTML5 elements  -->
+	<!-- More than likely you'll rip out everything except header/section/footer and start fresh -->
+	
+	<!-- First header has an ID so you can give it individual styles, and target stuff inside it -->
+	{% block header %}
+	<section id="mininav">
+		<div>
+			<div id="notice">
+				{% for message in messages %}
+            	<li class="success" id="message_{{ forloop.counter }}"><a href="#" onclick="$('#message_{{ forloop.counter }}').fadeOut(); return false;"><small style="float: right;">清除</small></a> {{ message }}</li>
+            	{% endfor %}
+			</div>
+
+			<div id="tool">
+			</div>
+		</div>
+	</section>
+
+	<!-- begin:  header  id="topwrapper"  -->
+	<header id="topheader" class="pagewrapper"><!-- begin: topwrapper  -->
+		<div id='logo'>
+			<a href="/" ><img src="{{ STATIC_URL }}images/logo.png" alt="{{SITE_NAME}}"/></a>
+		</div>
+		
+		<div class="float_left">
+			<h1>{{SITE_NAME}}</h1>
+			<p>{% trans "<abbr title='Django Dream Team&rsquo;s Content Management System.'>DDTCMS</abbr>, is build on Django1.4.2 Now." %}</p>
+		</div>
+		<div class='clear'></div>
+		
+		<!-- begin: navigation #nav --><!-- Main nav, styled by targeting "#hd1 nav"; you can have more than one nav element per page -->
+		<nav  id="nav" class="top-menu">
+			{% block topnav %}{% endblock topnav%}
+			
+		</nav>
+
+		<!-- end: navigation #nav-->
+	</header><!--end:topwrapper-->
+	<!-- /header -->
+
+
+	<!-- begin: breadcrumbs -->
+	<div id="breadcrumbs">
+	
+		<span class='float_right'>{% trans "Welcome to DDTCMS!" %}
+		{{ SITE_TIME|date:"Y-m-d H:i, D" }}</span>
+		{% trans "Breadcrumbs" %}: {% block breadcrumbs %}{% for crumb in crumbs %}<a href="{{ crumb.path }}">{% trans crumb.name %}</a>{% if not forloop.last %} &raquo; {% endif %}{% endfor %}{% endblock %}
+	
+	</div>
+	<!-- end: breadcrumbs -->
+	{% endblock header%}
+
+	{%comment%}
+    <section class="banner_main">
+    	<div id="reserved_banner"><!--begin:reserved_banner-->
+			<img src="{{ STATIC_URL }}images/banner/banner20010304.jpg">
+		</div><!--end:reserved_banner-->
+	</section>{%endcomment%}
+
+	<!-- This is the main "div" that wraps the content generically; don't use "section" for this -->
+	<div id="main" class="pagewrapper" role="main"><!--begin:midwrapper-->
+        {% block content %} {% endblock content%}
+        {% block extended_content %} {% endblock extended_content%}
+	</div><!-- #main -->
+	
+	{% block extended_page %}
+	
+	{% endblock extended_page %}
+		
+	<!-- The main footer has an ID for targeting, similar to the main header -->
+	<footer id="botmfooter"><!--begin:botmfooter-->
+	{% block footer %}{% endblock footer%}
+	
+	</footer><!--end:botmfooter-->
+
+</section>
+
+
+{%comment%}{%endcomment%}
+
+
+{% block js.extra %}{% endblock js.extra %}
+
+</body>
+</html>

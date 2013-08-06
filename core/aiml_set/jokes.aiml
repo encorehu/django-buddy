@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml>
+    <category>
+      <pattern>笑话</pattern>
+      <template>
+        <random>
+          <li>准备去见男友妈妈，在路上这货嘱咐我说：＂我妈不喜欢摸我JJ的女孩子...＂当时姐就震惊了，心想这二货怎么什么都跟他妈说...........又傻听了半天才明白刚才说的是＂磨磨唧唧的女孩子＂..次奥，吓姐一跳......</li>
+          <li>上次主人买了一箱槟榔。%(name)s一看就来劲了，硬要尝一点，好吧。。。半个小时后，%(name)s居然跑到主人面前，跪了下来，满脸通红，额头全是汗，主人问:你怎么了? %(name)s只说了一句话：你给我吃的是啥，解药，，快把解药给我。。。</li>
+          <li>看笑话的的人90%都是寂寞的。他们都想看我蠢像个傻逼, 然后自己笑的像个傻逼。</li>
+          <li>不要～</li>
+        </random>
+      </template>
+    </category>
+        <category>
+          <pattern>百度 *</pattern>
+          <template>
+            <system>百度 <star index="1"/></system>
+          </template>
+        </category>
+        <category>
+                  <pattern>功 能</pattern>
+                  <template>
+                    <system>功能</system>
+                  </template>
+                </category>
+</aiml>

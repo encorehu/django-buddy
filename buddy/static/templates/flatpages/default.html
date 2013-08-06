@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{{ flatpage.title }}{% endblock title %}
+{% block content %}
+<section class="article clearfix">
+		<article class="article_wrap">
+			<h1>{{ flatpage.title }}</h1>
+			<div>
+				<div class="box-top1"><span></span></div>
+				<div class="box1">
+					{{ flatpage.content }}
+
+					<div class="clear"></div>
+				</div>
+				<div class="box-bot"><span></span></div>
+			</div>
+			<div class="clear"></div>
+		</article>
+		<aside  class="article_aside">
+			{% block sidebar %}
+            {% endblock %}
+		</aside>
+	</section><!-- .hs1 -->
+
+{% endblock %}

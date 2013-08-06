@@ -2,7 +2,7 @@
 
 # C extensions
 *.so
-
+*~
 # Packages
 *.egg
 *.egg-info
@@ -33,3 +33,19 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+
+*.prj
+*.pui
+*.cmd
+*.log
+*.ini
+
+local_settings.py
+__pycache__
+test.py
+
+data/*
+*/data/*
+media/*
+*/media/*

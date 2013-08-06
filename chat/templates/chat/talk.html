@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title> Chat with Django Buddy</title>
+
+<meta name="description" content="Converse with super-advanced chatting robot">
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+
+<link rel="shortcut icon" href="/static/images/favicon.ico">
+<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/sim.css">
+<script type="text/javascript" src="{{STATIC_URL}}js/jquery-1.4.4.min.js"></script>
+<script type="text/javascript">
+var chat_type = "foreigner";
+var refreshCount = 0;
+var totalLearnedCount = 8542432;
+
+$(document).ready(function(){
+	if(getCookie("sagree") == "true") {
+		$("#wrapper-talk #contents").show();
+	}
+	else {
+		$("#agreement").show();
+	}
+
+	$("#logo-text").click(function() {
+		document.location.href="./";
+	});
+	$("#chatbtn").click(function(){
+		sendChat();
+	});
+	$("#chatbtn").mouseover(function(){
+		$(this).css("background-position", "0 -373px");
+	});
+	$("#chatbtn").mouseout(function(){
+		$(this).css("background-position", "0 -322px");
+	});
+
+	$("#userinput").keydown( function(evt) {
+		if( evt.keyCode == 10 || evt.keyCode == 13 ) {
+			sendChat();
+		}
+	});
+
+	$(".disagree").click(function() {
+		document.location.href="./";
+	});
+
+	$(".agree").click(function() {
+		$("#agreement").hide();
+		$("#wrapper-talk #contents").show();
+		setCookie("sagree", "true", "10000");
+	});
+
+	$("#userinput").focus();
+
+	$("#lang-selector").change(function(){
+		$("#hid-lang").val($("#lang-selector option:selected").val());
+		setCookie("selected_nc", $("#lang-selector option:selected").val(), "10000");
+		document.location.href="?lc=" + $("#hid-lang").val();
+	});
+
+	/*
+	$("#btn-quotes").mouseover(function(){
+		$(this).css("opacity","1.0");
+	});
+	$("#btn-quotes").mouseout(function(){
+		$(this).css("opacity","0.5");
+	});
+	*/
+
+	getLanguageInfo();
+});
+
+function commas(num){
+	num=output=num.toString(),l=num.length;
+	for(var i=l;i>-1;i=i-3){
+		if(i!=0 && i!=l){
+			output=output.substring(0,i)+','+output.substring(i)
+		}
+	}
+	return output;
+}
+
+function getCookie( name )
+{
+    var nameOfCookie = name + "=";
+    var x = 0;
+    while ( x <= document.cookie.length )
+    {
+        var y = (x+nameOfCookie.length);
+        if ( document.cookie.substring( x, y ) == nameOfCookie ) {
+            if ( (endOfCookie=document.cookie.indexOf( ";", y )) == -1 )
+                endOfCookie = document.cookie.length;
+            return unescape( document.cookie.substring( y, endOfCookie ) );
+        }
+        x = document.cookie.indexOf( " ", x ) + 1;
+        if ( x == 0 )
+        break;
+    }
+    return "";
+}
+
+function setCookie( cookieName, cookieValue, expireDate )
+{
+	var today = new Date();
+	today.setDate( today.getDate() + parseInt( expireDate ) );
+	document.cookie = cookieName + "=" + escape( cookieValue ) + "; path=/; expires=" + today.toGMTString() + ";";
+}
+
+function sendChat() {
+	var msg = $("#userinput").val();
+
+	if(msg.trim().length == 0) {
+		alert("Say something!");
+	    $("#userinput").val("");
+	    $("#userinput").focus();
+		return;
+	}
+
+	$("#loading").css('display', 'inline-block');
+
+	$("#userinput").attr("disabled", "disabled");
+	$("#userinput").val("");
+
+	$("#userinput").css({"background-image":"url('/static/images/ajax-loader.gif')", "background-repeat":"no-repeat", "margin-top":"4px"});
+
+	var delay = Math.floor((Math.random() * (2000 - 1000 + 1)) + 1000);
+	setTimeout(function(){delayChat(msg);}, 1);
+
+	return false;
+}
+
+function getLanguageInfo() {
+	$.ajax({
+	    url: "./func/langinfo",
+	    type: 'GET',
+	    dataType: 'json',
+	    contentType: "application/json; charset=utf-8",
+	    error: function(xhr, textStatus, errorThrown){
+	    	 console.log("Failed to getLanguageInfo !");
+	    },
+	    success: function(json) {
+		    try{
+		    	var x;
+		    	var totalLearnedCount = 0;
+		    	var isSelected = false;
+
+    			for(var x in json.nctable) {
+    				var opt = $("<option></option>").val(json.nctable[x].nc).text(json.nctable[x].vnc);
+
+    				if( getCookie("selected_nc") == json.nctable[x].nc ) {		// 저장된 쿠키값이 있으면 먼저 선택
+    					$(opt).attr("selected", "selected");
+    					isSelected = true;
+    					$("#hid-lang").val(json.nctable[x].nc);
+    				}
+    				else if( $("#hid-lang").val() == json.nctable[x].nc ) {		// 브라우저 설정 언어로 선택
+    					if(!isSelected) {
+    						$(opt).attr("selected", "selected");
+    					}
+    				}
+
+    				$(opt).appendTo("#lang-selector");
+
+    				totalLearnedCount += json.nctable[x].dbcnt;
+    			}
+
+    			$("#totalLearnedCount").text(commas(totalLearnedCount));
+    		}catch(e){
+		    	console.log("error!"+e);
+			}
+	    }
+	});
+}
+//talk send
+function delayChat(inputMsg){
+
+
+	var msg = encodeURIComponent(inputMsg);
+	//alert(msg);
+	msg=inputMsg;
+	var res = "";
+
+	$.ajax({
+		url: "/chat/func/req/",
+		data: {msg:msg, lc:$("#hid-lang").val()},
+	    type: 'GET',
+	    dataType: 'json',
+	    contentType: "application/json; charset=utf-8",
+	    error: function(xhr, textStatus, errorThrown){
+	    	 console.log("Failed to get response!");
+	    	 complete();
+	    },
+	    success: function(json) {
+		    try{
+		    	if(json.id > 0)
+		    		res = json.response;
+		    	else
+		    		res = "I have no response";
+		    	/*
+		    	if(json.result == "100"){
+			    	res = json.response;
+				}else{
+					res = "I have no response.";
+				}
+		    	*/
+
+		    	$(".templete").clone().removeClass("hidden").removeClass("templete")
+		    	.addClass("new-templete")
+		    	.appendTo("#msgs");
+
+		    	$(".new-templete:last").find(".right-convo").html("").append("<span>"+inputMsg.htmlEntities()+"</span>");
+		    	/*$(".new-templete:last").find(".left-convo").html("").append("<span>"+getAdResponse(res.htmlEntities())+"</span>");*/
+		    	$(".new-templete:last").find(".left-convo").html("").append("<span>"+ res.htmlEntities() +"</span>");
+
+		    	complete();
+    		}catch(e){
+		    	console.log("error!"+e);
+		    	complete();
+			}
+	    }
+	});
+}
+
+function complete() {
+   	$("#loading").hide();
+   	$("#userinput").attr("disabled", "");
+	$("#userinput").css({"background":"", "margin-top":"0px"});
+
+	$('#userinput').focus();
+
+	var divOffset = $("#msgs").offset().top;
+	var pOffset = $(".new-templete:last").offset().top;
+	var pScroll = pOffset - divOffset;
+
+	$("#msgs").animate({scrollTop: '+=' + parseInt(pScroll) + 'px'}, 600);
+}
+
+function getAdResponse(res) {
+	var msg = res + "<br />";
+
+	var rand = Math.floor(Math.random() * 20);
+
+	return msg;
+}
+
+function trackEvent(link, category, action) {
+	_gaq.push(['_trackEvent', category, action]);
+	setTimeout(function() {
+	    var a = document.createElement('a');
+
+	    if(document.createEvent) {
+		    a.setAttribute("href", link);
+		    a.setAttribute("target", "_blank");
+
+		    var dispatch = document.createEvent("HTMLEvents");
+		    dispatch.initEvent("click", true, true);
+		    a.dispatchEvent(dispatch);
+		}
+	    else if (document.createEventObject){
+	    	console.log('ie');
+			var evtObj = document.createEventObject();
+			a.fireEvent("onClick", evtObj);
+
+	    }
+	}, 200);
+}
+
+String.prototype.trim = function() {
+	return this.replace(/^\s+|\s+$/g,"");
+};
+String.prototype.ltrim = function() {
+	return this.replace(/^\s+/,"");
+};
+String.prototype.rtrim = function() {
+	return this.replace(/\s+$/,"");
+};
+String.prototype.unescapeHtml = function () {
+    var temp = document.createElement("div");
+    temp.innerHTML = this;
+    var result = temp.childNodes[0].nodeValue;
+    temp.removeChild(temp.firstChild);
+
+    return result;
+};
+String.prototype.htmlEntities = function() {
+    return String(this).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+};
+
+</script>
+</head>
+
+<body style="background:url(&#39;/static/images/bg.png&#39;) repeat fixed center top;background-color:#e5e5d7">
+
+<form name="chatform" id="chatform" onsubmit="return false;" method="post" style="display:inline">
+<input type="hidden" name="hid-lang" id="hid-lang" value="zh">
+
+<div id="wrapper-talk">
+	<div id="contents" style="display: block;">
+		<div id="logo-area">
+			<div id="logo-text"><img src="{{STATIC_URL}}images/logo.png" alt="logo" title="logo"></div>
+			<div id="menus">
+			<ul>
+					<li class="menu talk talk_select"><a href="/chat/" title="Chat"><span class="">Chat</span></a></li>
+					<li class="menu teach"><a href="#" title="Teach"><span class="">Teach</span></a></li>
+					<li class="menu quotes"><a href="#" title="Quotes"><span class="">Quotes</span></a></li>
+				</ul>
+			</div>
+			<div id="sns-subscribe" style="position:absolute;top:24px;right:160px;">
+				<div style="position:absolute;top:5px;"><a href="#" class="follow-button" data-show-count="false" data-show-screen-name="false" style="top:10px;">Follow @jiangoubadi</a></div>
+
+				</div>
+		</div><div id="chat">
+			<div class="bg-top"></div>
+			<div class="bg-bottom"></div>
+			<div id="msgs">
+				<table class="new-templete">
+				<tbody><tr>
+					<td class="bot">
+						<div class="img-bot"></div>
+						<div class="left-convo">Hi~!</div>
+					</td>
+				</tr>
+				</tbody></table>
+			 </div>
+			<div id="chat-bottom">
+				<div id="lang-area">
+					<span class="learn-desc">Badi learned <span id="totalLearnedCount">94,358</span> sentences.</span>
+					<select name="lang-selector" id="lang-selector"><option value="ch">Chinese – Simplified (簡體)</option><option value="ko">한국어</option><option value="en">English</option><option value="zh">Chinese – Traditional (繁體)</option><option value="ph">Filipino</option><option value="he">Hebrew</option><option value="th">Thai</option><option value="id">Bahasa Indonesia</option><option value="ja">日本語</option><option value="ms">Bahasa Melayu</option><option value="vn">tieng viet</option><option value="ar">العربية</option><option value="ru">Русский&lt;</option><option value="nl">Nederlands</option><option value="de">Deutsch</option><option value="pt">Português</option><option value="es">Español</option><option value="it">Italiano</option><option value="fr">Français</option><option value="sv">Svenska</option><option value="da">Dansk</option><option value="tr">Türkçe</option><option value="nb">Norsk (Bokmål)</option><option value="hr">Hrvatski</option><option value="kh">Khmer</option><option value="pl">Polski</option><option value="fi">Suomi</option><option value="ml">Malayalam</option><option value="hu">magyar</option><option value="ro">Română</option><option value="hi">Hindi</option><option value="bg">Български</option><option value="ta">Tamil</option><option value="el">Ελληνικά</option><option value="lt">Lietuvių</option><option value="uk">українець</option><option value="pa">Punjabi</option><option value="af">Afrikaans</option><option value="cs">čeština</option><option value="sk">Slovenčina</option><option value="rs">Српски</option><option value="ca">catala</option><option value="te">Telugu</option><option value="fa">فارسی</option><option value="eu">Euskara</option><option value="cy">Cymraeg</option><option value="al">Shqipëria</option><option value="az">آذربايجان ديلی</option></select>
+				</div>
+				<div id="chat-area">
+					<div id="chatbox"><input type="text" name="userinput" id="userinput" class="userinput" maxlength="100" style="margin-top: 0px;"></div>
+					<div id="chatbtn" style="background-position: 0px -322px;"><span>Send</span></div>
+				</div>
+			</div>
+			<!-- <div id="btn-quotes"></div> -->
+		</div>
+
+			<div class="space"></div>
+
+
+		</div>
+		<div class="cb"></div>
+		<div id="footer">
+		
+			<div class="left">
+			&copy;  JianGouBaDi Inc.<a href="http://csdnlp.duapp.com/" class="space">About</a>
+			<a href="http://csdnlp.duapp.com/api/" class="space" target="_blank">API</a>   
+			<a href="http://csdnlp.duapp.com/licenses/" class="space" target="_blank">Licenses</a>
+			<a href="http://ddtcms.com/blog/" class="space " target="_blank">Blog</a> 
+			</div>
+			<div class="cb"></div>
+		</div>
+		<div id="left-outer-banner">
+		</div>
+</div>
+
+</div>
+</form>
+
+<table class="templete hidden">
+<tbody><tr>
+	<td class="hu">
+		<div class="img-hu"></div>
+		<div class="right-convo"></div>
+	</td>
+</tr>
+<tr>
+	<td class="bot">
+		<div class="img-bot"></div>
+		<div class="left-convo"></div>
+	</td>
+</tr>
+</tbody></table>
+
+</body></html>
