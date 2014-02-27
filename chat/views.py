@@ -5,7 +5,6 @@ from django.template import RequestContext
 from django.shortcuts import get_object_or_404
 from django.core.cache import cache
 
-from django.views.generic.list_detail import object_list
 from django.views.generic import DateDetailView
 from django.views.generic import DetailView, ListView
 from django.views.decorators.http import  condition
